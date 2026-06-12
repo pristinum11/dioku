@@ -1,15 +1,34 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, Plus, FolderPlus } from "lucide-react";
+'use client'
+
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
+import { Sidebar, SidebarContent } from '@/components/dashboard/Sidebar'
+import { Search, Plus, FolderPlus, Menu } from 'lucide-react'
 
 export default function DashboardPage() {
+  const [mobileOpen, setMobileOpen] = useState(false)
+
   return (
     <div className="flex h-screen flex-col bg-background text-foreground">
+
       {/* Top Bar */}
-      <header className="flex h-14 shrink-0 items-center gap-4 border-b border-border px-4">
+      <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border px-3">
+
+        {/* Mobile drawer trigger */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          onClick={() => setMobileOpen(true)}
+        >
+          <Menu className="h-4 w-4" />
+        </Button>
+
         {/* Logo */}
-        <div className="flex items-center gap-2 font-semibold">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground text-sm font-bold">
+        <div className="flex items-center gap-2 font-semibold mr-2">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground text-sm font-bold">
             D
           </div>
           <span className="text-sm">Dioku</span>
@@ -29,7 +48,7 @@ export default function DashboardPage() {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <Button variant="outline" size="sm" className="gap-1.5 hidden sm:flex">
             <FolderPlus className="h-4 w-4" />
             New Collection
           </Button>
@@ -42,16 +61,24 @@ export default function DashboardPage() {
 
       {/* Body */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar placeholder */}
-        <aside className="w-56 shrink-0 border-r border-border p-4">
-          <h2 className="text-sm font-semibold text-muted-foreground">Sidebar</h2>
-        </aside>
 
-        {/* Main placeholder */}
+        {/* Mobile sidebar (Sheet) */}
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetContent side="left" className="w-56 p-0 border-r border-border">
+            <SheetTitle className="sr-only">Navigation</SheetTitle>
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
+
+        {/* Desktop sidebar */}
+        <Sidebar />
+
+        {/* Main */}
         <main className="flex-1 overflow-auto p-6">
           <h2 className="text-sm font-semibold text-muted-foreground">Main</h2>
         </main>
+
       </div>
     </div>
-  );
+  )
 }
