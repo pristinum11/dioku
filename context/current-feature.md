@@ -45,6 +45,16 @@ Configured the database layer with Prisma 7 ORM and Neon serverless PostgreSQL.
 - Initial migration applied to Neon development branch
 - Branch: `feature/database-setup`
 
+### Database Seed Script · Completed 2026-06-15
+
+Populates the Neon development database with realistic sample data.
+
+- Demo user: `demo@devstash.io`, password hashed with bcryptjs (12 rounds)
+- 7 system item types seeded (snippet, prompt, command, note, file, image, link)
+- 5 collections with 18 items total: React Patterns, AI Workflows, DevOps, Terminal Commands, Design Resources
+- Idempotent — safe to re-run via `npm run db:seed`
+- Branch: `feature/seed-data`
+
 ### Dashboard UI — Phase 3 · Completed 2026-06-15
 
 Main content area to the right of the sidebar.
