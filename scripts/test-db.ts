@@ -41,7 +41,7 @@ async function testDb() {
     if (existing.length > 0) {
       console.log("✓ Row counts:");
       for (const table of existing) {
-        const [{ count }] = await prisma.$queryRaw<[{ count: bigint }]>(
+        const [{ count }] = await prisma.$queryRawUnsafe<[{ count: bigint }]>(
           `SELECT COUNT(*) as count FROM "${table}"`
         );
         console.log(`  ${table}: ${count}`);
