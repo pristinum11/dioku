@@ -1,26 +1,10 @@
 # Current Feature
 
-Dashboard UI — Phase 3 of 3. Implements the main content area to the right of the sidebar.
+None — no feature currently in progress.
 
 ## Status
 
-In Progress
-
-## Goals
-
-### Phase 3 — Main Content Area
-
-- 4 stats cards at the top: total items, total collections, favorite items, favorite collections
-- Recent collections section
-- Pinned items section
-- 10 most recent items section
-
-## Notes
-
-- Reference screenshot: `@context/screenshots/dashboard-ui-main.png`
-- Import data directly from `@src/lib/mock-data.ts`
-- Phase 3 spec: `@context/features/dashboard-phase-3-spec.md`
-- Branch: `feature/dashboard-upgrade`
+—
 
 ## History
 
@@ -60,3 +44,14 @@ Configured the database layer with Prisma 7 ORM and Neon serverless PostgreSQL.
 - `scripts/test-db.ts` + `db:test` npm script for connection testing
 - Initial migration applied to Neon development branch
 - Branch: `feature/database-setup`
+
+### Dashboard UI — Phase 3 · Completed 2026-06-15
+
+Main content area to the right of the sidebar.
+
+- 4 stats cards: total items, total collections, favorite items, favorite collections
+- Collections grid sorted by most recently updated, with dominant-type left border, type icons, and favorite star
+- Pinned items section with type-colored cards, tags, and dates
+- 10 most recent items section (excluding pinned)
+- Components: `StatsCards`, `CollectionCard`, `ItemCard`, `DashboardMain`
+- Branch: `feature/dashboard-phase-3`
