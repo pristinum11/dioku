@@ -1,6 +1,6 @@
 # Current Feature
 
-Prisma + Neon PostgreSQL Setup — configures the database layer with Prisma 7 ORM and Neon serverless PostgreSQL, including the full initial schema and NextAuth models.
+Dashboard UI — Phase 3 of 3. Implements the main content area to the right of the sidebar.
 
 ## Status
 
@@ -8,21 +8,19 @@ In Progress
 
 ## Goals
 
-- Install and configure Prisma 7 with the Neon PostgreSQL adapter
-- Set up `DATABASE_URL` pointing to a Neon development branch
-- Write the initial `schema.prisma` from the data models in `@context/project-overview.md`
-- Include all NextAuth models (Account, Session, VerificationToken)
-- Add appropriate indexes and cascade deletes
-- Create and run the initial migration (`prisma migrate dev`)
-- Never use `db push` — always use migrations
+### Phase 3 — Main Content Area
+
+- 4 stats cards at the top: total items, total collections, favorite items, favorite collections
+- Recent collections section
+- Pinned items section
+- 10 most recent items section
 
 ## Notes
 
-- Spec: `@context/features/database-spec.md`
-- Data models reference: `@context/project-overview.md`
-- Use Prisma 7 — has breaking changes from v6; consult the upgrade guide before starting
-- Development branch goes in `DATABASE_URL`; production branch is separate
-- Production deployments must run `prisma migrate deploy` before the app starts
+- Reference screenshot: `@context/screenshots/dashboard-ui-main.png`
+- Import data directly from `@src/lib/mock-data.ts`
+- Phase 3 spec: `@context/features/dashboard-phase-3-spec.md`
+- Branch: `feature/dashboard-upgrade`
 
 ## History
 
@@ -39,9 +37,26 @@ Sets up the foundation: ShadCN, global layout, dark mode, top bar, and route sca
 - Placeholder sidebar and main area
 - Branch: `feature/dashboard-phase-1`
 
-### Dashboard UI — Phase 2 · Paused 2026-06-15
+### Dashboard UI — Phase 2 · Completed 2026-06-15
 
-Collapsible sidebar with item types, favorites/recent collections, and user avatar area.
+Collapsible sidebar with item types, favorite/recent collections, and user avatar area.
 
+- Collapsible desktop sidebar with `PanelLeft` toggle icon
+- Item type links to `/items/TYPE` with per-type icon, color, and item count
+- Favorites and Recent collections sections (collapsible)
+- All Collections section (collapsible, collapsed by default)
+- User avatar with name, email, and settings icon at the bottom
+- Mobile: always-open Sheet drawer triggered from the top bar
 - Branch: `feature/dashboard-phase-2`
-- Picking back up after database layer is in place
+
+### Prisma + Neon PostgreSQL Setup · Completed 2026-06-15
+
+Configured the database layer with Prisma 7 ORM and Neon serverless PostgreSQL.
+
+- Installed prisma@7, @prisma/adapter-neon, @neondatabase/serverless
+- Full schema: User, Item, Collection, ItemType, Tag, NextAuth models, join tables, indexes, cascade deletes
+- `prisma.config.ts` for Prisma 7 CLI (uses DIRECT_URL for migrations)
+- `src/lib/prisma.ts` singleton with PrismaNeon adapter
+- `scripts/test-db.ts` + `db:test` npm script for connection testing
+- Initial migration applied to Neon development branch
+- Branch: `feature/database-setup`
