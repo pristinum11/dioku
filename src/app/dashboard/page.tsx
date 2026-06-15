@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { Sidebar, SidebarContent } from '@/components/dashboard/Sidebar'
+import { DashboardMain } from '@/components/dashboard/DashboardMain'
 import { Search, Plus, FolderPlus, Menu } from 'lucide-react'
 
 export default function DashboardPage() {
@@ -74,9 +75,7 @@ export default function DashboardPage() {
         <Sidebar />
 
         {/* Main */}
-        <main className="flex-1 overflow-auto p-6">
-          <h2 className="text-sm font-semibold text-muted-foreground">Main</h2>
-        </main>
+        <DashboardMain />
 
       </div>
     </div>
