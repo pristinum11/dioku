@@ -1,10 +1,10 @@
 # Current Feature
 
-None — no feature currently in progress.
+None — no feature in progress.
 
 ## Status
 
-—
+Idle
 
 ## History
 
@@ -65,3 +65,14 @@ Main content area to the right of the sidebar.
 - 10 most recent items section (excluding pinned)
 - Components: `StatsCards`, `CollectionCard`, `ItemCard`, `DashboardMain`
 - Branch: `feature/dashboard-phase-3`
+
+### Dashboard Collections · Completed 2026-06-16
+
+Wired up real database data for the collections grid on the dashboard.
+
+- Created `src/lib/db/collections.ts` with Prisma data fetching functions
+- Fetched collections directly in server component (no mock data)
+- Collection card border color derived from most-used content type in the collection
+- Small type icons rendered on each collection card
+- Stats cards now use live database counts
+- Branch: `feature/dashboard-collections`

@@ -1,31 +1,19 @@
-'use client'
-
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
-import { Sidebar, SidebarContent } from '@/components/dashboard/Sidebar'
+import { Sidebar } from '@/components/dashboard/Sidebar'
 import { DashboardMain } from '@/components/dashboard/DashboardMain'
-import { Search, Plus, FolderPlus, Menu } from 'lucide-react'
+import { MobileSidebar } from '@/components/dashboard/MobileSidebar'
+import { Search, Plus, FolderPlus } from 'lucide-react'
 
 export default function DashboardPage() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-
   return (
     <div className="flex h-screen flex-col bg-background text-foreground">
 
       {/* Top Bar */}
       <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border px-3">
 
-        {/* Mobile drawer trigger */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setMobileOpen(true)}
-        >
-          <Menu className="h-4 w-4" />
-        </Button>
+        {/* Mobile sidebar trigger + sheet */}
+        <MobileSidebar />
 
         {/* Logo */}
         <div className="flex items-center gap-2 font-semibold mr-2">
@@ -62,21 +50,8 @@ export default function DashboardPage() {
 
       {/* Body */}
       <div className="flex flex-1 overflow-hidden">
-
-        {/* Mobile sidebar (Sheet) */}
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetContent side="left" className="w-56 p-0 border-r border-border">
-            <SheetTitle className="sr-only">Navigation</SheetTitle>
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
-
-        {/* Desktop sidebar */}
         <Sidebar />
-
-        {/* Main */}
         <DashboardMain />
-
       </div>
     </div>
   )
