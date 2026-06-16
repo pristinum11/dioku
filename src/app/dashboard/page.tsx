@@ -4,8 +4,22 @@ import { Sidebar } from '@/components/dashboard/Sidebar'
 import { DashboardMain } from '@/components/dashboard/DashboardMain'
 import { MobileSidebar } from '@/components/dashboard/MobileSidebar'
 import { Search, Plus, FolderPlus } from 'lucide-react'
+import { getItemTypesWithCounts } from '@/lib/db/items'
+import { getSidebarCollections } from '@/lib/db/collections'
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const [itemTypes, { favorites, recents, all }] = await Promise.all([
+    getItemTypesWithCounts(),
+    getSidebarCollections(),
+  ])
+
+  const sidebarData = {
+    itemTypes,
+    favoriteCollections: favorites,
+    recentCollections: recents,
+    allCollections: all,
+  }
+
   return (
     <div className="flex h-screen flex-col bg-background text-foreground">
 
@@ -13,7 +27,7 @@ export default function DashboardPage() {
       <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border px-3">
 
         {/* Mobile sidebar trigger + sheet */}
-        <MobileSidebar />
+        <MobileSidebar {...sidebarData} />
 
         {/* Logo */}
         <div className="flex items-center gap-2 font-semibold mr-2">
@@ -50,7 +64,7 @@ export default function DashboardPage() {
 
       {/* Body */}
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <Sidebar {...sidebarData} />
         <DashboardMain />
       </div>
     </div>

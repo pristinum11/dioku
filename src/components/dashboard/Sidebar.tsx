@@ -9,7 +9,9 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { mockItemTypes, mockItems, mockCollections, mockUser } from '@/lib/mock-data'
+import { mockUser } from '@/lib/mock-data'
+import type { SidebarItemType } from '@/lib/db/items'
+import type { SidebarCollection } from '@/lib/db/collections'
 
 // ─── Static mappings ──────────────────────────────────────────────────────────
 
@@ -27,21 +29,16 @@ const TYPE_PATH: Record<string, string> = {
   link: '/items/links',
 }
 
-// ─── Derived data ─────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-const typeCounts = mockItemTypes.reduce<Record<string, number>>((acc, type) => {
-  acc[type.id] = mockItems.filter(i => i.itemTypeId === type.id).length
-  return acc
-}, {})
+export interface SidebarData {
+  itemTypes: SidebarItemType[]
+  favoriteCollections: SidebarCollection[]
+  recentCollections: SidebarCollection[]
+  allCollections: SidebarCollection[]
+}
 
-const favoriteCollections = mockCollections.filter(c => c.isFavorite)
-
-const recentCollections = [...mockCollections]
-  .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
-  .slice(0, 3)
-
-const allCollections = [...mockCollections]
-  .sort((a, b) => a.name.localeCompare(b.name))
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getInitials(name: string | null) {
   if (!name) return '?'
@@ -50,8 +47,6 @@ function getInitials(name: string | null) {
 
 const NAV_LINK_CLASS =
   'flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function NavItem({
   href, collapsed, tooltip, children,
@@ -92,10 +87,14 @@ function SectionHeader({
 export function SidebarContent({
   collapsed = false,
   onToggleCollapse,
+  itemTypes,
+  favoriteCollections,
+  recentCollections,
+  allCollections,
 }: {
   collapsed?: boolean
   onToggleCollapse?: () => void
-}) {
+} & SidebarData) {
   const [favoritesOpen, setFavoritesOpen] = useState(true)
   const [recentOpen, setRecentOpen] = useState(true)
   const [allOpen, setAllOpen] = useState(false)
@@ -130,16 +129,15 @@ export function SidebarContent({
           </p>
         )}
         <nav className="space-y-0.5 px-2">
-          {mockItemTypes.map(type => {
+          {itemTypes.map(type => {
             const Icon = ICON_MAP[type.icon]
-            const count = typeCounts[type.id] ?? 0
             return (
               <NavItem key={type.id} href={TYPE_PATH[type.name] ?? '#'} collapsed={collapsed} tooltip={type.name}>
                 {Icon && <Icon className="h-4 w-4 shrink-0" style={{ color: type.color }} />}
                 {!collapsed && (
                   <>
                     <span className="flex-1 truncate capitalize">{type.name}</span>
-                    <span className="text-xs tabular-nums text-muted-foreground/60">{count}</span>
+                    <span className="text-xs tabular-nums text-muted-foreground/60">{type.itemCount}</span>
                   </>
                 )}
               </NavItem>
@@ -166,7 +164,7 @@ export function SidebarContent({
                       <Star className="h-3 w-3 shrink-0 fill-amber-400 text-amber-400" />
                       <span className="flex-1 truncate">{col.name}</span>
                       <span className="text-xs tabular-nums text-muted-foreground/60">
-                        {col.itemIds.length}
+                        {col.itemCount}
                       </span>
                     </Link>
                   ))}
@@ -182,11 +180,14 @@ export function SidebarContent({
                   {recentCollections.map(col => (
                     <Link key={col.id} href={`/collections/${col.id}`} className={NAV_LINK_CLASS}>
                       <div className="flex h-4 w-4 shrink-0 items-center justify-center">
-                        <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/40" />
+                        <div
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{ backgroundColor: col.dominantColor ?? '#6b7280' }}
+                        />
                       </div>
                       <span className="flex-1 truncate">{col.name}</span>
                       <span className="text-xs tabular-nums text-muted-foreground/60">
-                        {col.itemIds.length}
+                        {col.itemCount}
                       </span>
                     </Link>
                   ))}
@@ -209,12 +210,22 @@ export function SidebarContent({
                       </div>
                       <span className="flex-1 truncate">{col.name}</span>
                       <span className="text-xs tabular-nums text-muted-foreground/60">
-                        {col.itemIds.length}
+                        {col.itemCount}
                       </span>
                     </Link>
                   ))}
                 </nav>
               )}
+            </div>
+
+            {/* View all collections */}
+            <div className="px-3 mt-1">
+              <Link
+                href="/collections"
+                className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+              >
+                View all collections →
+              </Link>
             </div>
           </>
         )}
@@ -252,7 +263,7 @@ export function SidebarContent({
 
 // ─── Desktop sidebar (owns collapse state) ────────────────────────────────────
 
-export function Sidebar() {
+export function Sidebar(props: SidebarData) {
   const [collapsed, setCollapsed] = useState(false)
 
   return (
@@ -261,6 +272,7 @@ export function Sidebar() {
       collapsed ? 'w-14' : 'w-56',
     )}>
       <SidebarContent
+        {...props}
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed(c => !c)}
       />

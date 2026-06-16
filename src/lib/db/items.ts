@@ -77,3 +77,44 @@ export async function getRecentItems(limit = 10): Promise<ItemWithType[]> {
   })
   return items.map(mapItem)
 }
+
+export async function getItemsByTypeName(typeName: string): Promise<ItemWithType[]> {
+  const items = await prisma.item.findMany({
+    where: { itemType: { name: typeName } },
+    orderBy: [{ isPinned: 'desc' }, { updatedAt: 'desc' }],
+    include: itemInclude,
+  })
+  return items.map(mapItem)
+}
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+
+const TYPE_ORDER = ['snippet', 'prompt', 'command', 'note', 'file', 'image', 'link']
+
+export interface SidebarItemType {
+  id: string
+  name: string
+  icon: string
+  color: string
+  itemCount: number
+}
+
+export async function getItemTypesWithCounts(): Promise<SidebarItemType[]> {
+  const types = await prisma.itemType.findMany({
+    where: { isSystem: true },
+    include: { _count: { select: { items: true } } },
+  })
+  return types
+    .sort((a, b) => {
+      const ai = TYPE_ORDER.indexOf(a.name)
+      const bi = TYPE_ORDER.indexOf(b.name)
+      return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi)
+    })
+    .map(t => ({
+      id: t.id,
+      name: t.name,
+      icon: t.icon,
+      color: t.color,
+      itemCount: t._count.items,
+    }))
+}
