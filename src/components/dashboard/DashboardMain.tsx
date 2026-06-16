@@ -2,10 +2,8 @@ import Link from 'next/link'
 import { StatsCards } from './StatsCards'
 import { CollectionCard } from './CollectionCard'
 import { ItemCard } from './ItemCard'
-import { mockCollections, mockItems } from '@/lib/mock-data'
-
-const recentCollections = [...mockCollections]
-  .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+import { mockItems } from '@/lib/mock-data'
+import { getRecentCollections, getDashboardStats } from '@/lib/db/collections'
 
 const pinnedItems = mockItems.filter(i => i.isPinned)
 
@@ -18,7 +16,12 @@ const recentItems = [...mockItems]
   })
   .slice(0, 10)
 
-export function DashboardMain() {
+export async function DashboardMain() {
+  const [collections, stats] = await Promise.all([
+    getRecentCollections(),
+    getDashboardStats(),
+  ])
+
   return (
     <main className="flex-1 overflow-auto">
       <div className="mx-auto max-w-5xl space-y-8 px-6 py-6">
@@ -30,7 +33,7 @@ export function DashboardMain() {
         </div>
 
         {/* Stats */}
-        <StatsCards />
+        <StatsCards stats={stats} />
 
         {/* Collections */}
         <section>
@@ -44,7 +47,7 @@ export function DashboardMain() {
             </Link>
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {recentCollections.map(col => (
+            {collections.map(col => (
               <CollectionCard key={col.id} collection={col} />
             ))}
           </div>
