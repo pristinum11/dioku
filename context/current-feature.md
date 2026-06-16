@@ -76,3 +76,14 @@ Wired up real database data for the collections grid on the dashboard.
 - Small type icons rendered on each collection card
 - Stats cards now use live database counts
 - Branch: `feature/dashboard-collections`
+
+### Dashboard Items · Completed 2026-06-16
+
+Wired up real database data for pinned and recent items on the dashboard.
+
+- Created `src/lib/db/items.ts` with `getPinnedItems()` and `getRecentItems()` Prisma queries
+- Updated `ItemCard` to use `ItemWithType` from DB instead of mock data
+- Pinned section conditionally hidden when no pinned items exist
+- Item card icon and border color derived from live item type data
+- Tags fetched and displayed from DB join table
+- Branch: `feature/dashboard-items`

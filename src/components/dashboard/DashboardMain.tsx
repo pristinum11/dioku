@@ -2,24 +2,15 @@ import Link from 'next/link'
 import { StatsCards } from './StatsCards'
 import { CollectionCard } from './CollectionCard'
 import { ItemCard } from './ItemCard'
-import { mockItems } from '@/lib/mock-data'
 import { getRecentCollections, getDashboardStats } from '@/lib/db/collections'
-
-const pinnedItems = mockItems.filter(i => i.isPinned)
-
-const recentItems = [...mockItems]
-  .filter(i => !i.isPinned)
-  .sort((a, b) => {
-    const aDate = (a.lastUsedAt ?? a.createdAt).getTime()
-    const bDate = (b.lastUsedAt ?? b.createdAt).getTime()
-    return bDate - aDate
-  })
-  .slice(0, 10)
+import { getPinnedItems, getRecentItems } from '@/lib/db/items'
 
 export async function DashboardMain() {
-  const [collections, stats] = await Promise.all([
+  const [collections, stats, pinnedItems, recentItems] = await Promise.all([
     getRecentCollections(),
     getDashboardStats(),
+    getPinnedItems(),
+    getRecentItems(),
   ])
 
   return (
