@@ -87,3 +87,16 @@ Wired up real database data for pinned and recent items on the dashboard.
 - Item card icon and border color derived from live item type data
 - Tags fetched and displayed from DB join table
 - Branch: `feature/dashboard-items`
+
+### Stats & Sidebar · Completed 2026-06-16
+
+Wired up real database data for sidebar item types and collections; added items list pages per type.
+
+- Added `getItemTypesWithCounts()` to `src/lib/db/items.ts` — fetches system types with per-type item counts, sorted by canonical order
+- Added `getSidebarCollections()` to `src/lib/db/collections.ts` — returns favorites, recents (top 5 by updatedAt), and all collections with dominant type color
+- Rewrote `Sidebar.tsx` to accept DB data as props instead of mock data; recents show colored circle based on dominant item type
+- Updated `MobileSidebar.tsx` to pass sidebar data through to `SidebarContent`
+- Updated `dashboard/page.tsx` to fetch sidebar data server-side and pass as props
+- Added "View all collections" link at the bottom of the collections area
+- Created `src/app/items/[type]/page.tsx` with `getItemsByTypeName()` so sidebar type links resolve correctly
+- Branch: `feature/stats-sidebar`

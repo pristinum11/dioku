@@ -72,6 +72,61 @@ export async function getRecentCollections(limit = 6): Promise<CollectionWithTyp
   })
 }
 
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+
+export interface SidebarCollection {
+  id: string
+  name: string
+  isFavorite: boolean
+  itemCount: number
+  dominantColor: string | null
+}
+
+export async function getSidebarCollections(): Promise<{
+  favorites: SidebarCollection[]
+  recents: SidebarCollection[]
+  all: SidebarCollection[]
+}> {
+  const raw = await prisma.collection.findMany({
+    orderBy: { updatedAt: 'desc' },
+    include: {
+      items: {
+        include: {
+          item: {
+            include: { itemType: true },
+          },
+        },
+      },
+    },
+  })
+
+  const mapped: SidebarCollection[] = raw.map(col => {
+    const counts: Record<string, { color: string; count: number }> = {}
+    for (const ic of col.items) {
+      const t = ic.item.itemType
+      if (!counts[t.id]) counts[t.id] = { color: t.color, count: 0 }
+      counts[t.id].count++
+    }
+    const dominantColor =
+      Object.values(counts).sort((a, b) => b.count - a.count)[0]?.color ?? null
+    return {
+      id: col.id,
+      name: col.name,
+      isFavorite: col.isFavorite,
+      itemCount: col.items.length,
+      dominantColor,
+    }
+  })
+
+  const byName = [...mapped].sort((a, b) => a.name.localeCompare(b.name))
+
+  return {
+    favorites: mapped.filter(c => c.isFavorite).sort((a, b) => a.name.localeCompare(b.name)),
+    recents: mapped.slice(0, 5),
+    all: byName,
+  }
+}
+
 export async function getDashboardStats(): Promise<DashboardStats> {
   const [totalItems, totalCollections, favoriteItems, favoriteCollections] =
     await Promise.all([

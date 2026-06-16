@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
-import { SidebarContent } from '@/components/dashboard/Sidebar'
+import { SidebarContent, type SidebarData } from '@/components/dashboard/Sidebar'
 import { Menu } from 'lucide-react'
 
-export function MobileSidebar() {
+export function MobileSidebar(props: SidebarData) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -22,7 +22,7 @@ export function MobileSidebar() {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="left" className="w-56 p-0 border-r border-border">
           <SheetTitle className="sr-only">Navigation</SheetTitle>
-          <SidebarContent />
+          <SidebarContent {...props} />
         </SheetContent>
       </Sheet>
     </>
