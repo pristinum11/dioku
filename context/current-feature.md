@@ -1,23 +1,10 @@
 # Current Feature
 
-Add Pro Badge to Sidebar
+None — no feature in progress.
 
 ## Status
 
-In Progress
-
-## Goals
-
-- File and Image item type links in the sidebar display a "PRO" badge
-- Badge uses ShadCN UI Badge component
-- Badge text is uppercase "PRO" in bright yellow
-- Subtle but clear — doesn't overpower the sidebar
-
-## Notes
-
-- Only applies to the File and Image item types (Pro-only types)
-- Use ShadCN `Badge` component
-- Yellow color to match the "pro" feeling — bright but not garish
+Idle
 
 ## History
 
@@ -100,6 +87,16 @@ Wired up real database data for pinned and recent items on the dashboard.
 - Item card icon and border color derived from live item type data
 - Tags fetched and displayed from DB join table
 - Branch: `feature/dashboard-items`
+
+### Pro Badge in Sidebar · Completed 2026-06-22
+
+Added a "PRO" badge to the File and Image item type links in the sidebar.
+
+- Added ShadCN `Badge` component (`src/components/ui/badge.tsx`)
+- `PRO_TYPES` Set in `Sidebar.tsx` drives badge visibility for `file` and `image` types
+- Badge styled with `bg-yellow-400/10 text-yellow-400 border-yellow-400/20` — bright yellow text, subtle fill
+- Badge only renders in expanded sidebar state (hidden when collapsed to icon-only mode)
+- Branch: `feature/add-pro-badge-sidebar`
 
 ### Stats & Sidebar · Completed 2026-06-16
 
