@@ -1,10 +1,23 @@
 # Current Feature
 
-None — no feature in progress.
+Add Pro Badge to Sidebar
 
 ## Status
 
-Idle
+In Progress
+
+## Goals
+
+- File and Image item type links in the sidebar display a "PRO" badge
+- Badge uses ShadCN UI Badge component
+- Badge text is uppercase "PRO" in bright yellow
+- Subtle but clear — doesn't overpower the sidebar
+
+## Notes
+
+- Only applies to the File and Image item types (Pro-only types)
+- Use ShadCN `Badge` component
+- Yellow color to match the "pro" feeling — bright but not garish
 
 ## History
 
