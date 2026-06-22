@@ -9,11 +9,14 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { Badge } from '@/components/ui/badge'
 import { mockUser } from '@/lib/mock-data'
 import type { SidebarItemType } from '@/lib/db/items'
 import type { SidebarCollection } from '@/lib/db/collections'
 
 // ─── Static mappings ──────────────────────────────────────────────────────────
+
+const PRO_TYPES = new Set(['file', 'image'])
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Code, Sparkles, Terminal, StickyNote, File, Image, Link: LinkIcon,
@@ -136,7 +139,12 @@ export function SidebarContent({
                 {Icon && <Icon className="h-4 w-4 shrink-0" style={{ color: type.color }} />}
                 {!collapsed && (
                   <>
-                    <span className="flex-1 truncate capitalize">{type.name}</span>
+                    <span className="min-w-0 flex-1 truncate capitalize">{type.name}</span>
+                    {PRO_TYPES.has(type.name) && (
+                      <Badge className="bg-yellow-400/10 text-yellow-400 border-yellow-400/20 text-[10px] font-bold tracking-wider">
+                        PRO
+                      </Badge>
+                    )}
                     <span className="text-xs tabular-nums text-muted-foreground/60">{type.itemCount}</span>
                   </>
                 )}
